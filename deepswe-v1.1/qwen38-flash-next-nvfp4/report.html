@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 на 2× DGX Spark: первый опубликованный замер</title><style>
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 на 2× DGX Spark: независимый edge-замер (47.8%)</title><style>
 :root{--bg:#070b14;--panel:#0e1626;--line:#1d2c47;--ink:#dbe7ff;--muted:#7e93b8;--cyan:#00e5ff;--green:#3dffa0;--amber:#ffc857}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;color:var(--ink);background:radial-gradient(1000px 500px at 15% -5%,rgba(0,229,255,.09),transparent 60%),var(--bg);line-height:1.6;font-size:15.5px}
@@ -16,7 +16,7 @@ tr.me td{color:var(--green);font-weight:700}
 .note{background:rgba(255,200,87,.08);border:1px solid rgba(255,200,87,.35);border-left:3px solid var(--amber);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:14px}
 .muted{color:var(--muted);font-size:13px}
 </style></head><body><div class="page">
-<h1>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 на 2× DGX Spark: первый опубликованный замер</h1>
+<h1>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 на 2× DGX Spark: независимый edge-замер (47.8%)</h1>
 <p class="muted">Первое опубликованное измерение Qwen3.8-Flash-Next на DeepSWE v1.1 · локальный кластер 2× DGX Spark (GB10) · мини-SWE-агент</p>
 <div class="kpi"><div class="v">47.8%</div><div class="l">resolved (54/113 вердиктов)</div></div>
 <div class="kpi"><div class="v">113/113</div><div class="l">вердиктов получено</div></div>
@@ -24,7 +24,7 @@ tr.me td{color:var(--green);font-weight:700}
 <h2>Поле DeepSWE v1.1 (vendor-reported)</h2>
 <table><tr><th>Модель</th><th>Resolved</th></tr>
 <tr class="me"><td>**Qwen3.8-Flash-Next NVFP4 (наш замер, этот прогон)**</td><td class="num">47.8</td></tr>
-<tr><td>DS-V4.1-Flash (552B, не влезает)</td><td class='num'>74.2</td></tr><tr><td>Claude Opus-5.0 (frontier)</td><td class='num'>74.0</td></tr><tr><td>GPT-5.6 Sol (frontier)</td><td class='num'>73.0</td></tr><tr><td>MiMo-V2.6-Pro (1T, не влезает)</td><td class='num'>71.9</td></tr><tr><td>Claude Fable 5 (frontier)</td><td class='num'>70.0</td></tr><tr><td>**MiMo-V2.6-Flash-RL (311B)**</td><td class='num'>67.9</td></tr><tr><td>Kimi K3 (2.8T, не влезает)</td><td class='num'>67.5</td></tr><tr><td>GLM-5.3 (744B, не влезает)</td><td class='num'>66.9</td></tr><tr><td>GLM-5.3-Flash (320B)</td><td class='num'>63.4</td></tr><tr><td>DS-V4-Pro (не влезает)</td><td class='num'>62.7</td></tr><tr><td>DS-V4-Flash-0731 (284B)</td><td class='num'>54.4</td></tr></table>
+<tr><td>DS-V4.1-Flash (552B, не влезает)</td><td class='num'>74.2</td></tr><tr><td>Claude Opus-5.0 (frontier)</td><td class='num'>74.0</td></tr><tr><td>GPT-5.6 Sol (frontier)</td><td class='num'>73.0</td></tr><tr><td>MiMo-V2.6-Pro (1T, не влезает)</td><td class='num'>71.9</td></tr><tr><td>Claude Fable 5 (frontier)</td><td class='num'>70.0</td></tr><tr><td>**MiMo-V2.6-Flash-RL (311B)**</td><td class='num'>67.9</td></tr><tr><td>Kimi K3 (2.8T, не влезает)</td><td class='num'>67.5</td></tr><tr><td>GLM-5.3 (744B, не влезает)</td><td class='num'>66.9</td></tr><tr><td>GLM-5.3-Flash (320B)</td><td class='num'>63.4</td></tr><tr><td>DS-V4-Pro (не влезает)</td><td class='num'>62.7</td></tr><tr class=me><td>**Qwen3.8-Flash-Next — официально (карточка Qwen, bf16)**</td><td class='num'>58.7</td></tr><tr><td>DS-V4-Flash-0731 (284B)</td><td class='num'>54.4</td></tr></table>
 <h2>Разбивка по языкам</h2>
 <table><tr><th>Язык</th><th>Resolved</th><th>%</th></tr><tr><td>typescript</td><td class='num'>14/35</td><td class='num'><b>40%</b></td></tr><tr><td>go</td><td class='num'>18/34</td><td class='num'><b>53%</b></td></tr><tr><td>python</td><td class='num'>18/34</td><td class='num'><b>53%</b></td></tr><tr><td>rust</td><td class='num'>1/5</td><td class='num'><b>20%</b></td></tr><tr><td>javascript</td><td class='num'>3/5</td><td class='num'><b>60%</b></td></tr></table>
 <div class="note"><b>Паспорт прогона:</b> vLLM 0.30.0 · официальный NVIDIA QAT NVFP4 · MTP3 + драфт-словарь ru/en/code 65k (лосслесс) ·

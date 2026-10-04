@@ -4,6 +4,11 @@
 
 **Resolved 54/113 = 47.8%** (n-attempts=1), full 113-task DeepSWE v1.1 run.
 
+Reference: the [official model card](https://huggingface.co/Qwen/Qwen3.8-Flash-Next) reports
+DeepSWE 1.1 = 58.7 for this model (bf16, best of Claude Code / mini-SWE-agent, temp 1.0 /
+top_p 0.95, 256k). Our 47.8% is an independent lower-bound run of the NVFP4 export under
+edge constraints — see Caveats.
+
 - Runtime: 28.2 h wall clock (2026-10-03 07:51 UTC → 2026-10-04 12:05 UTC), concurrency 6
 - Tokens: 815.3M input / 9.0M output
 - Hardware: 2× NVIDIA DGX Spark (GB10, sm_121, aarch64, 128 GB unified per node),
