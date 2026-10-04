@@ -25,7 +25,6 @@ Supporting material:
 
 - Serving: stock vLLM 0.30.0 (official arm64 image), MTP ×3 speculative decoding with an output-safe draft vocabulary, 262k context.
 - Agent containers ran with restricted egress (allow-list HTTP proxy); a small number of external hosts returned 403 to the agent — visible as `Server: squid` responses inside trajectories.
-- To our knowledge the DeepSWE v1.1 run is the first published DeepSWE measurement served from an NVFP4-quantized checkpoint; we are not aware of a prior published full DeepSWE run on DGX Spark-class edge hardware either (corrections welcome).
 - Caveats and disclosures for each run are listed in its PASSPORT.md — please read them before comparing numbers across entries.
 
 ## License

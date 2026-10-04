@@ -7,10 +7,7 @@
 Reference: the [official model card](https://huggingface.co/Qwen/Qwen3.8-Flash-Next) reports
 DeepSWE 1.1 = 58.7 for this model (bf16, best of Claude Code / mini-SWE-agent, temp 1.0 /
 top_p 0.95, 256k). Our 47.8% is an independent lower-bound run of the NVFP4 export under
-edge constraints — see Caveats. To our knowledge this is also the first published DeepSWE
-measurement run on an NVFP4-quantized checkpoint: quantized builds elsewhere (e.g.
-Laguna S 2.1 NVFP4) replicate full-precision/API tables rather than measuring the
-quantized build.
+edge constraints — see Caveats.
 
 - Runtime: 28.2 h wall clock (2026-10-03 07:51 UTC → 2026-10-04 12:05 UTC), concurrency 6
 - Tokens: 815.3M input / 9.0M output
