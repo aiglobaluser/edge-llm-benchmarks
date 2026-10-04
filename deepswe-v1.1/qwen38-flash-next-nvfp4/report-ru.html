@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 on 2× DGX Spark: independent edge run (47.8%)</title><style>
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 на 2× DGX Spark: независимый edge-замер (47.8%)</title><style>
 :root{--bg:#070b14;--panel:#0e1626;--line:#1d2c47;--ink:#dbe7ff;--muted:#7e93b8;--cyan:#00e5ff;--green:#3dffa0;--amber:#ffc857}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;color:var(--ink);background:radial-gradient(1000px 500px at 15% -5%,rgba(0,229,255,.09),transparent 60%),var(--bg);line-height:1.6;font-size:15.5px}
@@ -17,17 +17,17 @@ tr.me td{color:var(--green);font-weight:700}
 .muted{color:var(--muted);font-size:13px}
 a{color:var(--cyan)}
 </style></head><body><div class="page">
-<h1>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 on 2× DGX Spark: independent edge run (47.8%)</h1>
-<p class="muted">Independent run of Qwen3.8-Flash-Next (NVFP4 export) on DeepSWE v1.1 · local 2× DGX Spark (GB10) cluster · mini-swe-agent</p>
+<h1>DeepSWE v1.1 — Qwen3.8-Flash-Next NVFP4 на 2× DGX Spark: независимый edge-замер (47.8%)</h1>
+<p class="muted">Независимый замер Qwen3.8-Flash-Next (NVFP4-экспорт) на DeepSWE v1.1 · локальный кластер 2× DGX Spark (GB10) · мини-SWE-агент</p>
 <div class="kpi"><div class="v">47.8%</div><div class="l">resolved (54/113)</div></div>
-<div class="kpi"><div class="v">113/113</div><div class="l">verdicts received</div></div>
-<div class="kpi"><div class="v">90</div><div class="l">90-min budget timeouts</div></div>
-<h2>DeepSWE v1.1 field (vendor-reported)</h2>
-<table><tr><th>Model</th><th>Resolved</th><th>Source</th></tr>
-<tr class="me"><td>Qwen3.8-Flash-Next NVFP4 — this run (ours)</td><td class="num">47.8</td><td><a href='https://github.com/aiglobaluser/edge-llm-benchmarks' style='color:var(--cyan)'>this repo</a></td></tr>
+<div class="kpi"><div class="v">113/113</div><div class="l">вердиктов получено</div></div>
+<div class="kpi"><div class="v">90</div><div class="l">таймаутов 90-мин бюджета</div></div>
+<h2>Поле DeepSWE v1.1 (vendor-reported)</h2>
+<table><tr><th>Модель</th><th>Resolved</th><th>Источник</th></tr>
+<tr class="me"><td>Qwen3.8-Flash-Next NVFP4 — наш замер (этот прогон)</td><td class="num">47.8</td><td><a href='https://github.com/aiglobaluser/edge-llm-benchmarks' style='color:var(--cyan)'>this repo</a></td></tr>
 <tr><td>DS-V4.1-Flash (552B)</td><td class='num'>74.2</td><td><a href='https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash' style='color:var(--cyan)'>DSV4.1-Flash card</a></td></tr><tr><td>Claude Opus-5.0</td><td class='num'>74.0</td><td><a href='https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash' style='color:var(--cyan)'>DSV4.1-Flash card</a></td></tr><tr><td>GPT-5.6 Sol</td><td class='num'>73.0</td><td><a href='https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash' style='color:var(--cyan)'>DSV4.1-Flash card</a></td></tr><tr><td>MiMo-V2.6-Pro (1T)</td><td class='num'>71.9</td><td><a href='https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL' style='color:var(--cyan)'>MiMo card</a></td></tr><tr><td>Claude Fable 5</td><td class='num'>70.0</td><td><a href='https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL' style='color:var(--cyan)'>MiMo card</a></td></tr><tr><td>MiMo-V2.6-Flash-RL (311B)</td><td class='num'>67.9</td><td><a href='https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL' style='color:var(--cyan)'>MiMo card</a></td></tr><tr><td>Kimi K3 (2.8T)</td><td class='num'>67.5</td><td><a href='https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash' style='color:var(--cyan)'>DSV4.1-Flash card</a></td></tr><tr><td>GLM-5.3 (744B)</td><td class='num'>66.9</td><td><a href='https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash' style='color:var(--cyan)'>DSV4.1-Flash card</a></td></tr><tr><td>DS-V4-Pro</td><td class='num'>62.7</td><td><a href='https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash' style='color:var(--cyan)'>DSV4.1-Flash card</a></td></tr><tr><td>Qwen3.8-Flash-Next (official, bf16)</td><td class='num'>58.7</td><td><a href='https://huggingface.co/Qwen/Qwen3.8-Flash-Next' style='color:var(--cyan)'>Qwen card</a></td></tr><tr><td>DS-V4-Flash-0731 (284B)</td><td class='num'>54.4</td><td><a href='https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash' style='color:var(--cyan)'>DSV4.1-Flash card</a></td></tr></table>
-<h2>By language</h2>
-<table><tr><th>Language</th><th>Resolved</th><th>%</th></tr><tr><td>typescript</td><td class='num'>14/35</td><td class='num'><b>40%</b></td></tr><tr><td>go</td><td class='num'>18/34</td><td class='num'><b>53%</b></td></tr><tr><td>python</td><td class='num'>18/34</td><td class='num'><b>53%</b></td></tr><tr><td>rust</td><td class='num'>1/5</td><td class='num'><b>20%</b></td></tr><tr><td>javascript</td><td class='num'>3/5</td><td class='num'><b>60%</b></td></tr></table>
-<div class="note"><b>Run passport:</b> vLLM 0.30.0 · official NVIDIA QAT NVFP4 · MTP3 + ru/en/code 65k draft vocabulary (lossless) · 262k context (some field entries used 400k) · temp 0.95 / top_p 1.0 · mini-swe-agent 2.4.6 + Pier 0.3.0 · 90-min agent budget per task (canonical task.toml) · 1 attempt (n-attempts=1) · inference entirely on the local cluster.</div>
-<p class="muted">Field numbers are vendor-reported by the linked model cards (see Source column); our run is a full community pass with open trajectories (repo + release).</p>
+<h2>По языкам</h2>
+<table><tr><th>Язык</th><th>Resolved</th><th>%</th></tr><tr><td>typescript</td><td class='num'>14/35</td><td class='num'><b>40%</b></td></tr><tr><td>go</td><td class='num'>18/34</td><td class='num'><b>53%</b></td></tr><tr><td>python</td><td class='num'>18/34</td><td class='num'><b>53%</b></td></tr><tr><td>rust</td><td class='num'>1/5</td><td class='num'><b>20%</b></td></tr><tr><td>javascript</td><td class='num'>3/5</td><td class='num'><b>60%</b></td></tr></table>
+<div class="note"><b>Паспорт прогона:</b> vLLM 0.30.0 · официальный NVIDIA QAT NVFP4 · MTP3 + драфт-словарь ru/en/code 65k (лосслесс) · контекст 262k (у части поля 400k — возможный минус на самых длинных задачах) · temp 0.95 / top_p 1.0 · mini-swe-agent 2.4.6 + Pier 0.3.0 · бюджет агента 90 мин/задача (канонический task.toml) · 1 попытка (n-attempts=1) · инференс целиком на локальном кластере.</div>
+<p class="muted">Числа поля публикуются карточками по ссылкам в колонке «Источник» (vendor-reported); наш замер — полный прогон с открытыми траекториями (репо и release).</p>
 </div></body></html>
