@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qwen3.8-Flash-Next NVFP4 × 2× DGX Spark — vLLM v0.30.0: полный квалификационный прогон</title>
+<style>
+  :root{
+    --bg:#070b14; --bg2:#0b1120; --panel:#0e1626; --panel2:#111c30;
+    --line:#1d2c47; --ink:#dbe7ff; --muted:#7e93b8;
+    --cyan:#00e5ff; --pink:#ff2ec4; --green:#3dffa0; --amber:#ffc857;
+    --mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--bg);}
+  body{
+    font-family:"Segoe UI","PT Sans",Arial,sans-serif; color:var(--ink);
+    background:
+      radial-gradient(1000px 500px at 15% -5%, rgba(0,229,255,.09), transparent 60%),
+      radial-gradient(900px 500px at 90% 0%, rgba(255,46,196,.07), transparent 55%),
+      var(--bg);
+    line-height:1.6; font-size:15.5px;
+  }
+  .page{max-width:980px; margin:0 auto; padding:44px 40px 72px;}
+  .neon-title{
+    font-size:27px; line-height:1.3; font-weight:800; letter-spacing:.3px;
+    color:#eaf6ff;
+    text-shadow:0 0 14px rgba(0,229,255,.55), 0 0 40px rgba(0,229,255,.25);
+  }
+  .neon-title .pink{color:var(--pink); text-shadow:0 0 14px rgba(255,46,196,.6), 0 0 40px rgba(255,46,196,.25);}
+  .subtitle{color:var(--muted); margin-top:8px; font-size:16px;}
+  header{
+    background:linear-gradient(180deg, rgba(0,229,255,.06), rgba(255,46,196,.04)), var(--panel);
+    border:1px solid var(--line); border-radius:14px; padding:28px 30px; margin-bottom:24px;
+    box-shadow:0 0 24px rgba(0,229,255,.10), inset 0 0 40px rgba(0,0,0,.25);
+  }
+  .meta{display:flex; flex-wrap:wrap; gap:8px 24px; margin-top:16px; font-size:13.5px; color:var(--muted);}
+  .meta b{color:var(--ink); font-weight:600;}
+  .badge{
+    display:inline-block; padding:3px 14px; border-radius:999px; font-size:13px; font-weight:800;
+    color:var(--green); border:1px solid var(--green);
+    box-shadow:0 0 12px rgba(61,255,160,.45), inset 0 0 8px rgba(61,255,160,.12);
+    letter-spacing:1px; vertical-align:middle; margin-left:12px;
+  }
+  h2{
+    font-size:19px; margin:40px 0 6px; color:#eaf6ff; letter-spacing:.2px;
+    text-shadow:0 0 10px rgba(0,229,255,.35);
+    border-bottom:1px solid var(--line); padding-bottom:8px;
+  }
+  h2 .no{color:var(--cyan); font-family:var(--mono); margin-right:10px; text-shadow:0 0 10px rgba(0,229,255,.8);}
+  h3{font-size:15.5px; color:var(--cyan); margin:18px 0 6px; letter-spacing:.3px;}
+  p{margin:9px 0;}
+  ul{margin:9px 0 9px 22px;} li{margin:5px 0;}
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:22px 0 4px;}
+  .kpi{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+    position:relative; overflow:hidden;
+  }
+  .kpi::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--cyan);
+    box-shadow:0 0 12px var(--cyan);}
+  .kpi.p::before{background:var(--pink); box-shadow:0 0 12px var(--pink);}
+  .kpi.g::before{background:var(--green); box-shadow:0 0 12px var(--green);}
+  .kpi .v{font-family:var(--mono); font-size:23px; font-weight:700; color:#fff;
+    text-shadow:0 0 10px rgba(0,229,255,.6);}
+  .kpi.p .v{text-shadow:0 0 10px rgba(255,46,196,.6);}
+  .kpi.g .v{text-shadow:0 0 10px rgba(61,255,160,.6);}
+  .kpi .l{font-size:12.5px; color:var(--muted); margin-top:4px;}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:14px;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  th{background:rgba(0,229,255,.07); text-align:left; padding:9px 13px; color:var(--cyan);
+     font-weight:700; letter-spacing:.4px; border-bottom:1px solid var(--line); font-size:13px; text-transform:uppercase;}
+  td{padding:9px 13px; border-bottom:1px solid rgba(29,44,71,.6); vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(0,229,255,.03);}
+  td.k{color:var(--muted); width:36%;}
+  td.num{font-family:var(--mono); white-space:nowrap;}
+  .ok{color:var(--green); font-weight:700; text-shadow:0 0 8px rgba(61,255,160,.5);}
+  code{font-family:var(--mono); font-size:12.5px; background:rgba(0,229,255,.08);
+    border:1px solid rgba(0,229,255,.18); border-radius:4px; padding:1px 6px; color:#bfefff;}
+  .note{
+    background:linear-gradient(90deg, rgba(255,200,87,.08), transparent 70%), var(--panel);
+    border:1px solid rgba(255,200,87,.35); border-left:3px solid var(--amber);
+    border-radius:10px; padding:13px 17px; margin:15px 0; font-size:14px;
+  }
+  .note b{color:var(--amber);}
+  .box{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:16px 20px; margin:15px 0; box-shadow:0 0 18px rgba(0,0,0,.35);
+  }
+  .glow{box-shadow:0 0 18px rgba(0,229,255,.12);}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:760px){.two{grid-template-columns:1fr;}}
+  footer{margin-top:48px; padding-top:16px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:12.5px; font-family:var(--mono);}
+  .hr-neon{height:1px; border:none; margin:34px 0;
+    background:linear-gradient(90deg, transparent, rgba(0,229,255,.5), rgba(255,46,196,.5), transparent);}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="neon-title">Qwen3.8-Flash-Next 125B-A5B <span class="pink">(NVFP4)</span><br>на кластере 2× DGX Spark — стоковый vLLM v0.30.0<span class="badge">QUALIFIED</span></div>
+  <div class="subtitle">Полный квалификационный прогон: функциональные гейты, контекст до 245k, префилл/декод, спекулятивный декодинг, энергия и термика</div>
+  <div class="meta">
+    <span><b>Железо:</b> 2× NVIDIA DGX Spark (GB10, sm_121, aarch64, 128 ГБ unified на узел)</span>
+    <span><b>Связь:</b> ConnectX-7, 200 Гбит/с, RoCE, две рельсы, DAC</span>
+    <span><b>Топология:</b> TP=2 + expert parallel</span>
+    <span><b>Дата:</b> октябрь 2026</span>
+  </div>
+</header>
+
+<h2><span class="no">00</span>TL;DR</h2>
+<div class="kpis">
+  <div class="kpi g"><div class="v">215</div><div class="l">ток/с агрегат — устойчивый c8</div></div>
+  <div class="kpi"><div class="v">~40</div><div class="l">ток/с одиночный поток</div></div>
+  <div class="kpi"><div class="v">3.9k</div><div class="l">ток/с холодный префилл</div></div>
+  <div class="kpi p"><div class="v">2 c</div><div class="l">TTFT повторного 245k-промпта (prefix cache)</div></div>
+  <div class="kpi g"><div class="v">245k</div><div class="l">needle-поиск — точное попадание</div></div>
+  <div class="kpi p"><div class="v">34 Вт</div><div class="l">на узел под нагрузкой (13 Вт idle)</div></div>
+  <div class="kpi"><div class="v">≤71°C</div><div class="l">самая горячая зона SoC, 0 троттлинга</div></div>
+  <div class="kpi g"><div class="v">0 / 0</div><div class="l">рестарты / OOM за весь прогон</div></div>
+</div>
+<div class="box">
+  <p>Официальный NVFP4-чекпоинт <b>Qwen3.8-Flash-Next</b> от NVIDIA стабильно работает на паре DGX Spark на <b>стоковом образе vllm/vllm-openai:v0.30.0</b> — без кастомных сборок. Касдомный образ больше не нужен: NVFP4 + MoE + MTP + двухузловой TP/EP вошли в официальный релиз. Гибридная архитектура (линейное внимание + MoE, поколение Qwen4-Exp) даёт редкое для 125B сочетание: полное 262k-окно, ~40 ток/с в один поток и 200+ ток/с агрегат при 8 потоках — при 34 Вт на узел.</p>
+</div>
+
+<hr class="hr-neon">
+
+<h2><span class="no">01</span>Конфигурация</h2>
+<table>
+  <tr><td class="k">Модель</td><td><code>nvidia/Qwen3.8-Flash-Next-NVFP4</code> — официальный QAT-экспорт NVIDIA modelopt, ~132 ГБ</td></tr>
+  <tr><td class="k">Архитектура</td><td>поколение Qwen4-Exp: MoE 125B параметров / ≈5B активных (512 экспертов, 10 на токен + shared), гибридное линейное внимание (GDN) + MTP-модуль</td></tr>
+  <tr><td class="k">Квантизация</td><td>веса NVFP4, MTP-эксперты FP8 (block 128×128), PLE n-gram embedding</td></tr>
+  <tr><td class="k">Рантайм</td><td>vLLM <b>v0.30.0</b>, стоковый образ <code>vllm/vllm-openai</code> (arm64, sm_121)</td></tr>
+  <tr><td class="k">Параллелизм</td><td>TP=2 + expert parallel, два узла по 200 Гбит/с RoCE (обе рельсы, merged NICs)</td></tr>
+  <tr><td class="k">Спекулятивный декодинг</td><td>MTP, 3 токена на шаг + сокращённый драфт-словарь <b>ru/en/code, 65 536 id</b> (дрфт по подмножеству словаря ускоряет lm_head-чтения; токены вне словаря гарантированно отбрасываются верификацией)</td></tr>
+  <tr><td class="k">Контекст</td><td>262 144 нативных позиции, chunked prefill 8192, prefix caching включён</td></tr>
+  <tr><td class="k">Память</td><td>утилизация 0.80; KV-кэш bf16 → <b>1 316 165 токенов</b> (5.02 полных 262k-запросов); Mamba/GDN-состояния bf16</td></tr>
+  <tr><td class="k">CUDA-графы</td><td>decode-only, размеры [1…64]; breakable-графы отключены (на этой платформе они дают разброс 10–18% и потери до 19% при конкурентности)</td></tr>
+  <tr><td class="k">Частоты</td><td>CPU capped 2.4 ГГц (термальный тюнинг; governor performance), GPU — сток (макс 3003 МГц, под нагрузкой ~2500)</td></tr>
+</table>
+
+<h2><span class="no">02</span>Методика — и три ловушки, о которых стоит знать</h2>
+<ul>
+  <li>Все скоростные метрики — по фактическим токенам <code>usage.completion_tokens</code> (не по времени стриминга!).</li>
+  <li><b>Прогрев обязателен:</b> первый после старта запрос и первый прогон нового размера батча включают JIT и захват CUDA-графов — показатели ниже на 40–60%.</li>
+  <li><b>Prefix cache искажает бенчмарки:</b> повторы одного промпта (и даже общие префиксы из одинакового текста-заполнителя!) дают TTFT в доли секунды. Холодный префилл мерить только на уникальном тексте. Ниже это разделено явно.</li>
+  <li><b>SSE-чанк ≠ токен:</b> один стриминг-чанк может нести несколько токенов; интервал чанков ~50 мс — это гладкость стрима, а не межтокенная задержка.</li>
+</ul>
+
+<h2><span class="no">03</span>Функциональные гейты</h2>
+<table>
+  <tr><th>Тест</th><th>Результат</th></tr>
+  <tr><td>Точное следование (thinking off): «столица Франции?»</td><td class="ok">«Париж», без мусора</td></tr>
+  <tr><td>Режим мышления, лёгкая задача (17×23)</td><td class="ok">391; пустой &lt;think&gt;-блок корректно вырезан парсером</td></tr>
+  <tr><td>Режим мышления, нетривиальная задача (поиск бага в рекурсии)</td><td class="ok">полное рассуждение (2169 симв.) + верный диагноз (шаг n−2 не сводит нечётные n к базе)</td></tr>
+  <tr><td><code>reasoning_effort</code> (low)</td><td class="ok">принят, краткое рассуждение, верный ответ</td></tr>
+  <tr><td>Вызов инструмента (OpenAI tools)</td><td class="ok">валидный JSON-аргумент, <code>finish_reason=tool_calls</code></td></tr>
+  <tr><td>Многоходовой tool-call (вызов → результат → финал)</td><td class="ok">финальный ответ использует данные из tool-результата</td></tr>
+  <tr><td>Стриминг</td><td class="ok">стабильные delta-чанки</td></tr>
+  <tr><td>Разрыв соединения посреди генерации</td><td class="ok">слот освобождён (running=0) за ≤3 с, следующий запрос — немедленно</td></tr>
+  <tr><td>Ограниченная генерация 4096 токенов</td><td class="ok">ровно 4096, штатный <code>finish_reason=length</code></td></tr>
+  <tr><td>Аутентификация</td><td class="ok">401 без ключа и с неверным ключом</td></tr>
+</table>
+
+<h2><span class="no">04</span>Длинный контекст: needle-лестница</h2>
+<p>Маркер погружён в середину технического текста-заполнителя, вопрос в конце, мышление выключено, ответ — только маркер.</p>
+<table>
+  <tr><th>Промпт</th><th>Время (холодный префилл)</th><th>Результат</th></tr>
+  <tr><td class="num">28 581</td><td class="num">—</td><td class="ok">точное попадание</td></tr>
+  <tr><td class="num">69 611</td><td class="num">18 с (~3.9k ток/с)</td><td class="ok">точное попадание</td></tr>
+  <tr><td class="num">139 162</td><td class="num">37 с (~3.8k ток/с)</td><td class="ok">точное попадание</td></tr>
+  <tr><td class="num">245 064</td><td class="num">см. prefix-cache ниже</td><td class="ok">точное попадание</td></tr>
+</table>
+<p>Полное окно 262 144 не исчерпано лишь на служебные токены шаблона — 245k (93% окна) — практический потолок одного запроса при этом лимите.</p>
+
+<h2><span class="no">05</span>Префилл и TTFT</h2>
+<div class="two">
+<div class="box glow">
+  <h3>Холодный префилл (уникальный текст)</h3>
+  <p class="num" style="font-size:20px; font-family:var(--mono); color:#fff;">≈ 3 800–3 900 ток/с</p>
+  <p style="color:var(--muted); font-size:13.5px;">на 70k и 139k промптах; деградации с ростом длины практически нет</p>
+</div>
+<div class="box glow">
+  <h3>TTFT при попадании в prefix cache</h3>
+  <table style="font-size:13px;">
+    <tr><th>Промпт</th><th>TTFT</th></tr>
+    <tr><td class="num">1k</td><td class="num">0.28 с</td></tr>
+    <tr><td class="num">16k</td><td class="num">0.32 с</td></tr>
+    <tr><td class="num">64k</td><td class="num">0.52 с</td></tr>
+    <tr><td class="num">128k</td><td class="num">0.73 с</td></tr>
+    <tr><td class="num">245k (полный повтор)</td><td class="num">≈2 с</td></tr>
+  </table>
+  <p style="color:var(--muted); font-size:13px;">агентные сценарии с переиспользуемым контекстом получают почти мгновенный старт</p>
+</div>
+</div>
+
+<h2><span class="no">06</span>Декод: масштабирование по конкурентности</h2>
+<table>
+  <tr><th>Потоков</th><th>Агрегат, ток/с</th><th>На поток, ток/с</th></tr>
+  <tr><td class="num">1</td><td class="num">36–44</td><td class="num">36–44</td></tr>
+  <tr><td class="num">2</td><td class="num">79</td><td class="num">~40</td></tr>
+  <tr><td class="num">4</td><td class="num">103–115</td><td class="num">26–29</td></tr>
+  <tr><td class="num">8</td><td class="num">183–200</td><td class="num">23–25</td></tr>
+  <tr><td class="num">8 (устойчивый, 90 c, 12 000 ток.)</td><td class="num"><b>215</b></td><td class="num">~27</td></tr>
+</table>
+<p>Декод упирается в пропускную способность unified-памяти (~273 ГБ/с на узел): с ростом батча скорость на поток плавно снижается, агрегат растёт почти линейно до лимита профиля (8 seq). Очередь ожидания на всём прогоне пуста. Интервал стриминг-чанков ~50 мс — вывод ощущается плавным.</p>
+
+<h2><span class="no">07</span>Спекулятивный декодинг (MTP ×3)</h2>
+<table>
+  <tr><th>Метрика</th><th>Значение</th></tr>
+  <tr><td class="k">Шагов драфта за прогон</td><td class="num">23 437</td></tr>
+  <tr><td class="k">Принято токенов / предложено</td><td class="num">34 126 / 70 311 → <b>48.5%</b></td></tr>
+  <tr><td class="k">Acceptance по позициям (1/2/3)</td><td class="num">69% / 46% / 30%</td></tr>
+  <tr><td class="k">Эффективность</td><td class="num">≈1.46 токена за шаг драфта</td></tr>
+</table>
+<p>Замер на смешанной нагрузке (русский + английский, проза + код). Ускорение к базе — примерно 1.8–2×. Acceptance сильно зависит от содержания: на техническом ru/en-тексте с профильным драфт-словарём — выше, на неожиданном стиле — ниже.</p>
+
+<h2><span class="no">08</span>Энергия, температуры, частоты</h2>
+<table>
+  <tr><th>Метрика</th><th>Узел 0 (head)</th><th>Узел 1 (worker)</th></tr>
+  <tr><td class="k">Энергопотребление: idle → нагрузка</td><td class="num">15 Вт → 34 Вт (33–35)</td><td class="num">13 Вт → 34 Вт (31–37)</td></tr>
+  <tr><td class="k">GPU-температура под нагрузкой</td><td class="num">61–69 °C</td><td class="num">56–63 °C</td></tr>
+  <tr><td class="k">Самая горячая зона SoC (acpitz)</td><td class="num">до 71 °C</td><td class="num">до 67 °C</td></tr>
+  <tr><td class="k">SM-частота под нагрузкой</td><td class="num">2483–2548 МГц</td><td class="num">2411–2509 МГц</td></tr>
+  <tr><td class="k">Утилизация GPU / памяти</td><td class="num">94–96% / bandwidth-bound</td><td class="num">92–95%</td></tr>
+  <tr><td class="k">События троттлинга за прогон</td><td class="ok">0 новых</td><td class="ok">0</td></tr>
+  <tr><td class="k">NVMe</td><td class="num">≤71 °C</td><td class="num">≤67 °C</td></tr>
+</table>
+<p><b>Ограничения частот:</b> CPU capped на 2.4 ГГц (осознанный термальный тюнинг: на этой платформе кап CPU даёт около −8 °C почти без потерь в инференсе — CPU в decode почти не работает, но греет общий радиатор). GPU — стоковые частоты, лимита мощности нет (паспорт 140 Вт никогда не достигается: decode — это ~34 Вт).</p>
+<div class="note"><b>Наблюдение для владельцев Spark:</b> decode на этой модели — холодный режим (~34 Вт на узел). Горячие фазы — старт движка (загрузка весов + JIT, пики ~96 Вт и 94 °C зоны SoC на 2–3 минуты). Если мерить термику — мерить именно старты, устойчивая генерация узлы почти не греет.</div>
+
+<h2><span class="no">09</span>Устойчивость</h2>
+<ul>
+  <li>Рестарты контейнеров: <b>0/0</b>, OOMKilled: <b>false/false</b> за весь прогон (включая 245k-промпты и 8-поточные очереди).</li>
+  <li>Разрыв стрима клиентом не течёт: слот освобождается, метрики running/waiting обнуляются.</li>
+  <li>KV-пул детерминирован от старта к старту (1 316 165 токенов при одних параметрах).</li>
+  <li>Загрузка весов ~8 минут, healthcheck поднимается штатно.</li>
+</ul>
+
+<h2><span class="no">10</span>Подводные камни</h2>
+<ul>
+  <li><b>Поле мышления.</b> Стоковый vLLM 0.30 отдаёт reasoning в поле <code>reasoning</code>, а не <code>reasoning_content</code> (как в более старых сборках). OpenAI-совместимые прокси (например, LiteLLM) транслируют автоматически; прямой клиент должен читать новое имя.</li>
+  <li><b>Первый запрос всегда медленный</b> (JIT): не принимайте скорости «на холодную» за регрессию.</li>
+  <li><b>Бенчмарки и prefix cache:</b> одинаковый текст-заполнитель между прогонами = кэш-хит = красивые, но пустые TTFT. Уникализируйте корпус.</li>
+  <li><b>Мышление расходует лимит</b> <code>max_tokens</code> первым — ставьте лимит с запасом или отключайте thinking для коротких ответов.</li>
+  <li><b>Драфт-словарь — профильный инструмент:</b> 65k ru/en/code ускоряет профильный контент; вне словаря скорость не падает (верификация отбрасывает), но выигрыш MTP уменьшается.</li>
+</ul>
+
+<h2><span class="no">11</span>Выводы</h2>
+<div class="box">
+<ul>
+  <li>Стоковый vLLM 0.30.0 закрывает потребность в кастомных образах для NVFP4+MTP на GB10 — это веха для экосистемы DGX Spark.</li>
+  <li>Профиль «локальный ревьюер/агент»: 262k окно, ~40 ток/с на поток, 200+ агрегат, 34 Вт — тепловой и энергетический бюджет почти любого шкафа.</li>
+  <li>Prefix caching на 245k-контексте превращает повторные агентные запросы в мгновенные — закладывайте переиспользуемые префиксы в промпты.</li>
+  <li>Все функциональные гейты (мышление, инструменты, стриминг, длинный контекст) — зелёные; стабильность — без замечаний.</li>
+</ul>
+</div>
+
+<footer>
+Qwen3.8-Flash-Next NVFP4 × 2× DGX Spark (GB10) × vLLM v0.30.0 · квалификационный прогон, октябрь 2026<br>
+Все числа — фактические замеры; методика и ловушки измерений — раздел 02. Благодарности: сообществу MiaAI-Lab за публичный launch-рецепт и NVIDIA за официальный NVFP4-экспорт чекпоинта.
+</footer>
+
+</div>
+</body>
+</html>
