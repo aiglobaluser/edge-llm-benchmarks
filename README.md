@@ -16,9 +16,10 @@ Supporting material:
 
 ## How to verify
 
-1. `result.json` is the raw aggregate from the [Pier](https://github.com/swe-project-pier/pier) harness — its `metrics.mean` (0.4779) equals 54/113.
-2. `verdicts.csv` lists the per-task verifier reward (1 = resolved, 0 = not); count the 1s.
+1. `result.json` is the raw aggregate from the [Pier](https://github.com/datacurve-ai/pier) harness — its `metrics.mean` (0.4779) equals 54/113.
+2. `verdicts.csv` lists the per-task verifier reward (1 = resolved), the task language, and the agent execution window: count the 1s for the score; `agent_duration_min ≈ 90` marks tasks that hit the budget cap (90/113); the per-language split can be recomputed from the `language` column.
 3. The release asset contains all 113 ATIF agent trajectories so agent behavior can be inspected end-to-end.
+4. The exact engine configuration is published in [`serving-stack.md`](deepswe-v1.1/qwen38-flash-next-nvfp4/serving-stack.md) (verbatim `vllm serve` arguments and environment).
 
 ## Methodology notes
 

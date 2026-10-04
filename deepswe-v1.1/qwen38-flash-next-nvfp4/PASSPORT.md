@@ -19,8 +19,8 @@
 
 1. **Agent budget 90 min** — the canonical `task.toml` value; some entries cite longer
    budgets (GLM-5.3 mentions a 6h timeout). Our number is a lower bound under that
-   comparison. 90/113 tasks hit the budget cap; 54 resolved, incl. 39 after the agent
-   had already converged.
+   comparison. 90/113 tasks hit the budget cap (see `agent_duration_min` in `verdicts.csv`);
+   54 resolved, incl. 39 after the agent had already converged.
 2. **Context 262k** (checkpoint-native). Some entries used 400k; history was truncated
    on the longest tasks.
 3. Inference entirely on local edge hardware (no cloud API calls, no fee-paid tokens).
@@ -33,7 +33,8 @@
 
 - Score cross-checked against Pier's own `result.json` aggregate: metrics mean 0.4779 == 54/113.
 - Per-task artifacts: `result.json` (aggregate), `config.json` (sanitized run config),
-  `verdicts.csv` (per-task verifier reward), 113 ATIF trajectories — all in this repository
+  `verdicts.csv` (per-task reward, language, agent timing), `serving-stack.md`
+  (verbatim engine configuration), 113 ATIF trajectories — all in this repository
   and its release assets: https://github.com/aiglobaluser/edge-llm-benchmarks
 
 ## Contact
